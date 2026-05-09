@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Выталкивающая сила — 7 класс — Пёрышкин</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700;900&family=JetBrains+Mono:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#06101a; --bg2:#0a1828; --bg3:#0e2035; --bg4:#122540;
+  --blue:#00b4d8; --blue2:#0077b6; --teal:#48cae4;
+  --orange:#fb8500; --yellow:#ffb703;
+  --green:#52b788; --red:#e63946;
+  --water:#0096c7; --water-light:rgba(0,180,216,0.35);
+  --text:#e0f4ff; --text-dim:#5a8aaa; --text-mid:#8ab4cc;
+  --border:rgba(0,180,216,0.18);
+  --card:rgba(10,24,40,0.95);
+  --shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Nunito',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--blue2);border-radius:4px;}
+
+/* ===== HEADER ===== */
+.header{
+  background:rgba(6,16,26,0.97);
+  border-bottom:1px solid var(--border);
+  padding:14px 16px;
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.header-left{display:flex;flex-direction:column;gap:2px;}
+.subject{font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.15em;font-family:'JetBrains Mono',monospace;}
+.title{font-family:'Unbounded',sans-serif;font-size:14px;font-weight:900;color:var(--blue);}
+.progress-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.progress-bar{width:80px;height:4px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:4px;transition:width .5s ease;}
+.progress-txt{font-size:9px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
+
+/* ===== NAV DOTS ===== */
+.nav-dots{
+  display:flex;justify-content:center;gap:8px;
+  padding:10px 16px;
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav-dots::-webkit-scrollbar{display:none;}
+.dot{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--text-dim);
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;
+}
+.dot:hover{border-color:var(--blue);color:var(--blue);}
+.dot.active{border-color:var(--blue);background:var(--blue);color:#000;}
+.dot.done{border-color:var(--green);background:rgba(82,183,136,0.15);color:var(--green);}
+
+/* ===== SLIDES ===== */
+.slide{display:none;padding:16px;animation:slideIn .35s ease;}
+.slide.active{display:flex;flex-direction:column;gap:16px;}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== SECTION LABELS ===== */
+.section-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,180,216,0.1);border:1px solid rgba(0,180,216,0.25);
+  border-radius:20px;padding:4px 12px;
+  font-size:10px;font-weight:700;color:var(--blue);
+  text-transform:uppercase;letter-spacing:.1em;
+  font-family:'JetBrains Mono',monospace;
+  width:fit-content;
+}
+
+/* ===== CARDS ===== */
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:18px;padding:16px;
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--blue),transparent);
+}
+.card-title{
+  font-family:'Unbounded',sans-serif;font-size:13px;font-weight:700;
+  color:var(--text);margin-bottom:10px;
+}
+.card-text{font-size:13px;line-height:1.7;color:var(--text-mid);}
+.card-text b{color:var(--text);}
+.card-text .hl{color:var(--blue);font-weight:700;}
+.card-text .hl-orange{color:var(--orange);font-weight:700;}
+.card-text .hl-green{color:var(--green);font-weight:700;}
+
+/* ===== FORMULA BOX ===== */
+.formula-box{
+  background:linear-gradient(135deg,rgba(0,119,182,0.15),rgba(0,180,216,0.08));
+  border:1px solid rgba(0,180,216,0.3);
+  border-radius:14px;padding:16px;text-align:center;
+  margin:8px 0;
+}
+.formula{
+  font-family:'JetBrains Mono',monospace;
+  font-size:22px;font-weight:700;
+  color:var(--blue);letter-spacing:.05em;
+}
+.formula-desc{font-size:11px;color:var(--text-dim);margin-top:8px;line-height:1.6;}
+.formula-desc span{color:var(--text-mid);}
+
+/* ===== DEFINITION BOX ===== */
+.def-box{
+  background:rgba(0,180,216,0.06);
+  border-left:3px solid var(--blue);
+  border-radius:0 12px 12px 0;
+  padding:12px 14px;margin:8px 0;
+  font-size:13px;line-height:1.6;
+  color:var(--text-mid);
+}
+.def-box b{color:var(--text);}
+
+/* ===== EXPERIMENT CANVAS ===== */
+.experiment{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:18px;overflow:hidden;
+}
+.experiment-header{
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.exp-title{font-family:'Unbounded',sans-serif;font-size:12px;font-weight:700;}
+.exp-badge{
+  font-size:9px;padding:3px 10px;border-radius:20px;
+  background:rgba(251,133,0,0.12);border:1px solid rgba(251,133,0,0.3);
+  color:var(--orange);letter-spacing:.1em;font-family:'JetBrains Mono',monospace;
+}
+.canvas-wrap{display:flex;justify-content:center;padding:16px;}
+.exp-controls{
+  padding:12px 16px;border-top:1px solid var(--border);
+  display:flex;flex-direction:column;gap:10px;
+}
+.slider-row{display:flex;align-items:center;gap:10px;}
+.slider-lbl{font-size:11px;color:var(--text-dim);width:90px;flex-shrink:0;}
+.slider-val{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);width:60px;text-align:right;flex-shrink:0;}
+input[type=range]{
+  flex:1;height:4px;border-radius:4px;
+  -webkit-appearance:none;appearance:none;
+  background:var(--bg3);outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;
+  border-radius:50%;background:var(--blue);cursor:pointer;
+  box-shadow:0 0 8px rgba(0,180,216,0.5);
+  transition:transform .15s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border:none;border-radius:50%;background:var(--blue);}
+
+/* ===== INFO GRID ===== */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.info-item{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:12px;text-align:center;
+}
+.info-val{
+  font-family:'Unbounded',sans-serif;font-size:20px;font-weight:900;
+  color:var(--blue);transition:all .4s;
+}
+.info-val.highlight{color:var(--yellow);text-shadow:0 0 12px rgba(255,183,3,0.4);}
+.info-lbl{font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:3px;}
+.info-unit{font-size:10px;color:var(--text-dim);}
+
+/* ===== FACTS ===== */
+.fact-card{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:14px;padding:14px;
+  display:flex;gap:12px;align-items:flex-start;
+  transition:all .2s;
+}
+.fact-card:hover{border-color:var(--blue);background:rgba(0,180,216,0.05);}
+.fact-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
+.fact-text{font-size:12px;line-height:1.6;color:var(--text-mid);}
+.fact-text b{color:var(--text);}
+
+/* ===== CONDITIONS ===== */
+.conditions{display:flex;flex-direction:column;gap:8px;}
+.cond-item{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+  font-size:12px;color:var(--text-mid);
+}
+.cond-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.cond-icon.sink{background:rgba(230,57,70,0.12);border:1px solid rgba(230,57,70,0.25);}
+.cond-icon.float{background:rgba(82,183,136,0.12);border:1px solid rgba(82,183,136,0.25);}
+.cond-icon.neutral{background:rgba(0,180,216,0.12);border:1px solid rgba(0,180,216,0.25);}
+.cond-label{font-weight:700;}
+.cond-label.sink-txt{color:var(--red);}
+.cond-label.float-txt{color:var(--green);}
+.cond-label.neutral-txt{color:var(--blue);}
+
+/* ===== QUIZ ===== */
+.quiz-card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:18px;padding:16px;
+}
+.quiz-num{
+  font-size:9px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;
+  text-transform:uppercase;letter-spacing:.15em;margin-bottom:8px;
+}
+.quiz-q{font-size:14px;font-weight:700;line-height:1.5;margin-bottom:14px;}
+.quiz-opts{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{
+  background:var(--bg3);border:2px solid var(--border);
+  border-radius:12px;padding:12px 14px;cursor:pointer;
+  font-size:13px;line-height:1.4;transition:all .2s;
+  display:flex;align-items:center;gap:10px;
+}
+.quiz-opt:hover{border-color:var(--blue);background:rgba(0,180,216,0.06);}
+.quiz-opt.correct{border-color:var(--green)!important;background:rgba(82,183,136,0.1)!important;color:var(--green);}
+.quiz-opt.wrong{border-color:var(--red)!important;background:rgba(230,57,70,0.1)!important;color:var(--red);}
+.quiz-opt.disabled{pointer-events:none;}
+.opt-num{
+  width:24px;height:24px;border-radius:50%;
+  border:1px solid currentColor;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;flex-shrink:0;
+}
+.quiz-explain{
+  margin-top:12px;padding:12px;border-radius:12px;
+  font-size:12px;line-height:1.6;display:none;
+}
+.quiz-explain.show{display:block;}
+.quiz-explain.ok{background:rgba(82,183,136,0.1);border:1px solid rgba(82,183,136,0.25);color:var(--green);}
+.quiz-explain.fail{background:rgba(230,57,70,0.1);border:1px solid rgba(230,57,70,0.25);color:var(--red);}
+
+/* ===== NAV BUTTONS ===== */
+.nav-btns{display:flex;gap:10px;margin-top:4px;}
+.nav-btn{
+  flex:1;padding:14px;border:none;border-radius:14px;
+  font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .25s;letter-spacing:.05em;
+}
+.btn-next{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;box-shadow:0 6px 20px rgba(0,180,216,0.25);}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,180,216,0.35);}
+.btn-next:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.btn-back{background:var(--bg3);border:1px solid var(--border);color:var(--text-dim);}
+.btn-back:hover{border-color:var(--blue);color:var(--text);}
+
+/* ===== SUMMARY ===== */
+.summary-score{
+  text-align:center;padding:24px;
+  background:linear-gradient(135deg,rgba(0,119,182,0.15),rgba(0,180,216,0.08));
+  border:1px solid rgba(0,180,216,0.25);
+  border-radius:18px;
+}
+.score-emoji{font-size:48px;margin-bottom:12px;}
+.score-val{font-family:'Unbounded',sans-serif;font-size:42px;font-weight:900;color:var(--blue);}
+.score-lbl{font-size:13px;color:var(--text-dim);margin-top:6px;}
+.score-msg{font-size:14px;color:var(--text-mid);margin-top:12px;line-height:1.6;}
+
+/* ===== KEY POINTS ===== */
+.key-points{display:flex;flex-direction:column;gap:8px;}
+.kp{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+  display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.5;
+}
+.kp-num{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--blue2);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ===== REGISTRATION SCREEN ===== */
+#regScreen{
+  position:fixed;inset:0;z-index:200;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:24px;
+  animation:fadeIn .4s ease;
+}
+.reg-logo{font-size:48px;margin-bottom:16px;}
+.reg-title{
+  font-family:'Unbounded',sans-serif;font-size:18px;font-weight:900;
+  color:var(--blue);text-align:center;margin-bottom:6px;
+}
+.reg-sub{font-size:12px;color:var(--text-dim);text-align:center;margin-bottom:28px;line-height:1.6;}
+.reg-form{width:100%;max-width:340px;display:flex;flex-direction:column;gap:14px;}
+.reg-field{display:flex;flex-direction:column;gap:6px;}
+.reg-label{
+  font-size:10px;color:var(--text-dim);text-transform:uppercase;
+  letter-spacing:.12em;font-family:'JetBrains Mono',monospace;
+}
+.reg-input{
+  background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:12px;padding:13px 14px;
+  font-size:15px;color:var(--text);
+  font-family:'Nunito',sans-serif;
+  outline:none;transition:border .2s;
+  width:100%;
+}
+.reg-input:focus{border-color:var(--blue);}
+.reg-input::placeholder{color:var(--text-dim);}
+.reg-hint{font-size:10px;color:var(--text-dim);margin-top:2px;}
+.reg-btn{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;border:none;border-radius:14px;
+  padding:16px;font-family:'Unbounded',sans-serif;
+  font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .25s;box-shadow:0 6px 20px rgba(0,180,216,0.3);
+  margin-top:4px;
+}
+.reg-btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,180,216,0.4);}
+.reg-btn:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.reg-error{
+  color:var(--red);font-size:11px;text-align:center;
+  background:rgba(230,57,70,0.08);border:1px solid rgba(230,57,70,0.2);
+  border-radius:10px;padding:8px 12px;display:none;
+}
+.reg-error.show{display:block;}
+
+/* ===== STUDENT BADGE (header) ===== */
+.student-badge{
+  display:none;
+  background:rgba(0,180,216,0.1);border:1px solid rgba(0,180,216,0.2);
+  border-radius:10px;padding:4px 10px;
+  font-size:9px;color:var(--blue);
+  font-family:'JetBrains Mono',monospace;
+  max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ===== SEND STATUS ===== */
+.send-status{
+  padding:12px 14px;border-radius:12px;
+  font-size:12px;text-align:center;line-height:1.5;
+  margin-top:4px;display:none;
+}
+.send-status.sending{
+  display:block;
+  background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);
+  color:var(--blue);
+}
+.send-status.sent{
+  display:block;
+  background:rgba(82,183,136,0.1);border:1px solid rgba(82,183,136,0.25);
+  color:var(--green);
+}
+.send-status.error{
+  display:block;
+  background:rgba(230,57,70,0.08);border:1px solid rgba(230,57,70,0.2);
+  color:var(--red);
+}
+
+/* ===== SETUP GUIDE ===== */
+.setup-guide{
+  background:var(--bg2);border:1px solid rgba(251,133,0,0.25);
+  border-radius:18px;padding:16px;margin-top:8px;
+}
+.setup-guide-title{
+  font-family:'Unbounded',sans-serif;font-size:11px;font-weight:700;
+  color:var(--orange);margin-bottom:12px;display:flex;align-items:center;gap:6px;
+}
+.setup-step{
+  display:flex;gap:10px;margin-bottom:10px;
+  font-size:11px;line-height:1.6;color:var(--text-mid);
+}
+.setup-step-num{
+  width:20px;height:20px;border-radius:50%;
+  background:rgba(251,133,0,0.15);border:1px solid rgba(251,133,0,0.3);
+  color:var(--orange);display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:700;flex-shrink:0;margin-top:1px;
+  font-family:'JetBrains Mono',monospace;
+}
+.setup-code{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:8px 10px;margin:6px 0;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--teal);line-height:1.7;word-break:break-all;
+}
+.url-input-wrap{display:flex;gap:8px;align-items:center;margin-top:8px;}
+.url-input{
+  flex:1;background:var(--bg3);border:1.5px solid var(--border);
+  border-radius:10px;padding:10px 12px;
+  font-size:11px;color:var(--text);
+  font-family:'JetBrains Mono',monospace;outline:none;
+  transition:border .2s;
+}
+.url-input:focus{border-color:var(--orange);}
+.url-input::placeholder{color:var(--text-dim);}
+.url-save-btn{
+  background:var(--orange);color:#000;border:none;
+  border-radius:10px;padding:10px 14px;
+  font-family:'Unbounded',sans-serif;font-size:9px;font-weight:700;
+  cursor:pointer;white-space:nowrap;transition:opacity .2s;
+}
+.url-save-btn:hover{opacity:.85;}
+
+/* ===== ANIMATIONS ===== */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes ripple{0%{transform:scale(0);opacity:.6}100%{transform:scale(2.5);opacity:0}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .4s ease forwards;}
+
+@media(max-width:380px){
+  .formula{font-size:18px;}
+  .info-grid{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== REGISTRATION SCREEN ===== -->
+<div id="regScreen">
+  <div class="reg-logo">🌊</div>
+  <div class="reg-title">Выталкивающая сила</div>
+  <div class="reg-sub">Физика 7 класс • Пёрышкин<br>Введи своё имя, чтобы начать урок</div>
+  <div class="reg-form">
+    <div class="reg-field">
+      <div class="reg-label">Фамилия и Имя</div>
+      <input class="reg-input" id="inputName" type="text" placeholder="Например: Иванов Иван" autocomplete="off" maxlength="60">
+      <div class="reg-hint">Введи фамилию и имя полностью</div>
+    </div>
+    <div class="reg-field">
+      <div class="reg-label">Класс</div>
+      <input class="reg-input" id="inputClass" type="text" placeholder="Например: 7А" autocomplete="off" maxlength="10">
+    </div>
+    <div class="reg-error" id="regError">Пожалуйста, заполни оба поля</div>
+    <button class="reg-btn" id="regBtn" onclick="startLesson()">Начать урок →</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <span class="subject">Физика 7 класс • Пёрышкин</span>
+    <span class="title">Выталкивающая сила</span>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+    <div class="student-badge" id="studentBadge"></div>
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:14%"></div></div>
+      <span class="progress-txt" id="progTxt">1 / 7</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV DOTS -->
+<div class="nav-dots">
+  <div class="dot active" id="dot1" onclick="goTo(1)">1</div>
+  <div class="dot" id="dot2" onclick="goTo(2)">2</div>
+  <div class="dot" id="dot3" onclick="goTo(3)">3</div>
+  <div class="dot" id="dot4" onclick="goTo(4)">4</div>
+  <div class="dot" id="dot5" onclick="goTo(5)">5</div>
+  <div class="dot" id="dot6" onclick="goTo(6)">6</div>
+  <div class="dot" id="dot7" onclick="goTo(7)">7</div>
+</div>
+
+<!-- ==================== SLIDE 1: ВВЕДЕНИЕ ==================== -->
+<div class="slide active" id="slide1">
+  <div class="section-badge">🌊 Тема урока</div>
+  <div class="card">
+    <div class="card-title">Почему одни тела тонут, а другие — нет?</div>
+    <div class="card-text">
+      Ты замечал, что деревянный брусок <span class="hl">плавает</span> в воде,
+      а металлический болт <span class="hl-orange">тонет</span>? Почему так происходит?<br><br>
+      Всё дело в особой силе — <b>выталкивающей силе</b> (или <b>силе Архимеда</b>).
+      Эта сила действует на любое тело, погружённое в жидкость или газ.
+    </div>
+  </div>
+  <div class="experiment">
+    <div class="experiment-header">
+      <span class="exp-title">🔬 Наблюдение</span>
+      <span class="exp-badge">ТАПНИ НА ТЕЛО</span>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="introCanvas" width="300" height="200"></canvas>
+    </div>
+    <div class="exp-controls">
+      <div style="font-size:11px;color:var(--text-dim);text-align:center;">
+        Нажми на тело чтобы бросить его в воду 👆
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-text">
+      На уроке ты узнаешь:<br><br>
+      <b>1.</b> Что такое выталкивающая сила и почему она возникает<br>
+      <b>2.</b> Как вычислить силу Архимеда по формуле<br>
+      <b>3.</b> От чего зависит — тонет тело или плавает<br>
+      <b>4.</b> Как это применяется в жизни
+    </div>
+  </div>
+  <div class="nav-btns">
+    <button class="nav-btn btn-next" onclick="goTo(2)">Начать урок →</button>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: ПРИЧИНА ==================== -->
+<div class="slide" id="slide2">
+  <div class="section-badge">📖 Теория — §48</div>
+  <div class="card">
+    <div class="card-title">Почему возникает выталкивающая сила?</div>
+    <div class="card-text">
+      Когда тело погружено в жидкость, жидкость давит на него <b>со всех сторон</b>.
+      Давление жидкости зависит от глубины — чем глубже, тем <span class="hl">больше давление</span>.<br><br>
+      Поэтому давление на <b>нижнюю</b> часть тела <span class="hl">больше</span>,
+      чем на <b>верхнюю</b>. Возникает <span class="hl">разность сил давления</span> —
+      это и есть <b>выталкивающая сила</b>!
+    </div>
+  </div>
+  <div class="experiment">
+    <div class="experiment-header">
+      <span class="exp-title">⚡ Давление на глубине</span>
+      <span class="exp-badge">ИНТЕРАКТИВ</span>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="pressureCanvas" width="300" height="220"></canvas>
+    </div>
+    <div class="exp-controls">
+      <div class="slider-row">
+        <span class="slider-lbl">Глубина тела:</span>
+        <input type="range" id="depthSlider" min="1" max="8" value="4" oninput="updatePressure()">
+        <span class="slider-val" id="depthVal">4 м</span>
+      </div>
+    </div>
+  </div>
+  <div class="def-box">
+    <b>Выталкивающая сила</b> — это разность сил давления жидкости на нижнюю
+    и верхнюю поверхности тела. Она всегда направлена <b>вертикально вверх</b>.
+  </div>
+  <div class="nav-btns">
+    <button class="nav-btn btn-back" onclick="goTo(1)">← Назад</button>
+    <button class="nav-btn btn-next" onclick="goTo(3)">Дальше →</button>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: ФОРМУЛА ==================== -->
+<div class="slide" id="slide3">
+  <div class="section-badge">📐 Формула Архимеда</div>
+  <div class="card">
+    <div class="card-title">Закон Архимеда</div>
+    <div class="card-text">
+      Греческий учёный <b>Архимед</b> (287–212 до н.э.) открыл этот закон
+      ещё в древности. По легенде — в ванне! 🛁
+    </div>
+  </div>
+  <div class="formula-box">
+    <div class="formula">F꜀ = ρ · g · V</div>
+    <div class="formula-desc">
+      <span>F꜀</span> — выталкивающая сила (Н)<br>
+      <span>ρ</span> — плотность жидкости (кг/м³)<br>
+      <span>g</span> — ускорение свободного падения (10 м/с²)<br>
+      <span>V</span> — объём вытесненной жидкости (м³)
+    </div>
+  </div>
+  <div class="experiment">
+    <div class="experiment-header">
+      <span class="exp-title">🧮 Калькулятор силы Архимеда</span>
+      <span class="exp-badge">СЧИТАЕТ САМО</span>
+    </div>
+    <div class="exp-controls" style="padding:16px;">
+      <div class="slider-row">
+        <span class="slider-lbl">Плотность жидкости:</span>
+        <input type="range" id="rhoSlider" min="500" max="2000" step="100" value="1000" oninput="calcArch()">
+        <span class="slider-val" id="rhoVal">1000</span>
+      </div>
+      <div style="font-size:10px;color:var(--text-dim);text-align:center;margin:-4px 0;">кг/м³ (вода = 1000, морская = 1025, масло = 900)</div>
+      <div class="slider-row">
+        <span class="slider-lbl">Объём тела:</span>
+        <input type="range" id="volSlider" min="100" max="2000" step="100" value="500" oninput="calcArch()">
+        <span class="slider-val" id="volVal">500</span>
+      </div>
+      <div style="font-size:10px;color:var(--text-dim);text-align:center;margin:-4px 0;">см³</div>
+      <div class="info-grid" style="margin-top:8px;">
+        <div class="info-item">
+          <div class="info-val" id="archForce">5.00</div>
+          <div class="info-lbl">Сила Архимеда</div>
+          <div class="info-unit">Н</div>
+        </div>
+        <div class="info-item">
+          <div class="info-val" id="archMass">0.50</div>
+          <div class="info-lbl">Масса жидкости</div>
+          <div class="info-unit">кг</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="def-box">
+    <b>Вывод:</b> выталкивающая сила равна весу жидкости в объёме, который занимает тело.
+    Это и есть <b>закон Архимеда</b>!
+  </div>
+  <div class="nav-btns">
+    <button class="nav-btn btn-back" onclick="goTo(2)">← Назад</button>
+    <button class="nav-btn btn-next" onclick="goTo(4)">Дальше →</button>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: ЭКСПЕРИМЕНТ ==================== -->
+<div class="slide" id="slide4">
+  <div class="section-badge">🔬 Виртуальный опыт</div>
+  <div class="card">
+    <div class="card-title">Погружаем тело в жидкость</div>
+    <div class="card-text">
+      Попробуй сам! Меняй плотность тела и наблюдай:
+      тонет оно или всплывает? Смотри на показания весов.
+    </div>
+  </div>
+  <div class="experiment">
+    <div class="experiment-header">
+      <span class="exp-title">⚗️ Опыт: тело в воде</span>
+      <span class="exp-badge">ЭКСПЕРИМЕНТ</span>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="expCanvas" width="300" height="240"></canvas>
+    </div>
+    <div class="exp-controls">
+      <div class="slider-row">
+        <span class="slider-lbl">Плотность тела:</span>
+        <input type="range" id="bodyRhoSlider" min="200" max="2000" step="100" value="800" oninput="updateExp()">
+        <span class="slider-val" id="bodyRhoVal">800</span>
+      </div>
+      <div style="font-size:10px;color:var(--text-dim);text-align:center;margin:-4px 0;">кг/м³ (дерево≈700, лёд≈900, металл≈7800)</div>
+    </div>
+  </div>
+  <div class="info-grid">
+    <div class="info-item">
+      <div class="info-val" id="weightVal">4.0</div>
+      <div class="info-lbl">Вес в воздухе</div>
+      <div class="info-unit">Н</div>
+    </div>
+    <div class="info-item">
+      <div class="info-val" id="archVal2">5.0</div>
+      <div class="info-lbl">Сила Архимеда</div>
+      <div class="info-unit">Н</div>
+    </div>
+    <div class="info-item" style="grid-column:1/-1;">
+      <div class="info-val" id="resultTxt" style="font-size:16px;">🪵 ПЛАВАЕТ</div>
+      <div class="info-lbl">Результат</div>
+    </div>
+  </div>
+  <div class="nav-btns">
+    <button class="nav-btn btn-back" onclick="goTo(3)">← Назад</button>
+    <button class="nav-btn btn-next" onclick="goTo(5)">Дальше →</button>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: УСЛОВИЯ ==================== -->
+<div class="slide" id="slide5">
+  <div class="section-badge">📋 Условия плавания</div>
+  <div class="card">
+    <div class="card-title">Когда тело тонет, плавает или парит?</div>
+    <div class="card-text">
+      Всё зависит от соотношения <b>веса тела</b> и <b>силы Архимеда</b>:
+    </div>
+  </div>
+  <div class="conditions">
+    <div class="cond-item">
+      <div class="cond-icon sink">⬇️</div>
+      <div>
+        <div class="cond-label sink-txt">F꜀ &lt; P тела → ТОНЕТ</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:3px;">ρ тела > ρ жидкости (железо в воде)</div>
+      </div>
+    </div>
+    <div class="cond-item">
+      <div class="cond-icon float">⬆️</div>
+      <div>
+        <div class="cond-label float-txt">F꜀ > P тела → ВСПЛЫВАЕТ</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:3px;">ρ тела &lt; ρ жидкости (дерево в воде)</div>
+      </div>
+    </div>
+    <div class="cond-item">
+      <div class="cond-icon neutral">↔️</div>
+      <div>
+        <div class="cond-label neutral-txt">F꜀ = P тела → ПАРИТ</div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:3px;">ρ тела = ρ жидкости (рыба в воде)</div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:4px;">
+    <div class="card-title">Применение в жизни</div>
+  </div>
+  <div class="fact-card"><div class="fact-icon">🚢</div><div class="fact-text"><b>Корабль</b> сделан из стали (плотность ~7800 кг/м³), но <b>плавает</b>! Потому что внутри воздух — средняя плотность корабля меньше воды.</div></div>
+  <div class="fact-card"><div class="fact-icon">🎈</div><div class="fact-text"><b>Воздушный шар</b> поднимается, потому что горячий воздух внутри <b>легче</b> холодного воздуха снаружи — выталкивающая сила атмосферы!</div></div>
+  <div class="fact-card"><div class="fact-icon">🐟</div><div class="fact-text"><b>Рыбы</b> регулируют глубину с помощью <b>плавательного пузыря</b> — меняют свой объём и среднюю плотность.</div></div>
+  <div class="fact-card"><div class="fact-icon">🧊</div><div class="fact-text">Лёд <b>плавает</b> в воде, потому что его плотность (900 кг/м³) <b>меньше</b> плотности воды (1000 кг/м³). 9/10 айсберга — под водой!</div></div>
+  <div class="nav-btns">
+    <button class="nav-btn btn-back" onclick="goTo(4)">← Назад</button>
+    <button class="nav-btn btn-next" onclick="goTo(6)">К тесту →</button>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: ТЕСТ ==================== -->
+<div class="slide" id="slide6">
+  <div class="section-badge">📝 Проверь себя</div>
+
+  <!-- Предупреждение: 1 попытка -->
+  <div style="background:rgba(251,133,0,0.08);border:1px solid rgba(251,133,0,0.25);border-radius:14px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;">
+    <div style="font-size:20px;flex-shrink:0;">⚠️</div>
+    <div style="font-size:12px;color:var(--text-mid);line-height:1.6;">
+      <b style="color:var(--orange);">Внимание!</b> Тест проходится <b style="color:var(--text);">один раз</b> — изменить ответ после выбора нельзя. Результат будет сохранён в журнал учителя. Отвечай внимательно!
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="quiz-card" id="q1card">
+    <div class="quiz-num">Вопрос 1 из 4</div>
+    <div class="quiz-q">В каком направлении действует выталкивающая сила на тело в жидкости?</div>
+    <div class="quiz-opts">
+      <div class="quiz-opt" onclick="answer(1,this,false)"><div class="opt-num">А</div>Горизонтально, в сторону движения воды</div>
+      <div class="quiz-opt" onclick="answer(1,this,true)"><div class="opt-num">Б</div>Вертикально вверх</div>
+      <div class="quiz-opt" onclick="answer(1,this,false)"><div class="opt-num">В</div>Вертикально вниз</div>
+      <div class="quiz-opt" onclick="answer(1,this,false)"><div class="opt-num">Г</div>По диагонали</div>
+    </div>
+    <div class="quiz-explain" id="exp1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card" id="q2card">
+    <div class="quiz-num">Вопрос 2 из 4</div>
+    <div class="quiz-q">Тело объёмом 200 см³ погружено в воду (ρ = 1000 кг/м³). Чему равна сила Архимеда?</div>
+    <div class="quiz-opts">
+      <div class="quiz-opt" onclick="answer(2,this,false)"><div class="opt-num">А</div>0.2 Н</div>
+      <div class="quiz-opt" onclick="answer(2,this,true)"><div class="opt-num">Б</div>2 Н</div>
+      <div class="quiz-opt" onclick="answer(2,this,false)"><div class="opt-num">В</div>20 Н</div>
+      <div class="quiz-opt" onclick="answer(2,this,false)"><div class="opt-num">Г</div>200 Н</div>
+    </div>
+    <div class="quiz-explain" id="exp2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card" id="q3card">
+    <div class="quiz-num">Вопрос 3 из 4</div>
+    <div class="quiz-q">Деревянный брусок (ρ = 600 кг/м³) бросают в воду (ρ = 1000 кг/м³). Что произойдёт?</div>
+    <div class="quiz-opts">
+      <div class="quiz-opt" onclick="answer(3,this,false)"><div class="opt-num">А</div>Утонет, потому что дерево тяжёлое</div>
+      <div class="quiz-opt" onclick="answer(3,this,true)"><div class="opt-num">Б</div>Будет плавать, потому что ρ дерева &lt; ρ воды</div>
+      <div class="quiz-opt" onclick="answer(3,this,false)"><div class="opt-num">В</div>Зависнет посередине</div>
+      <div class="quiz-opt" onclick="answer(3,this,false)"><div class="opt-num">Г</div>Растворится в воде</div>
+    </div>
+    <div class="quiz-explain" id="exp3"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card" id="q4card">
+    <div class="quiz-num">Вопрос 4 из 4</div>
+    <div class="quiz-q">Почему корабль из стали не тонет, хотя сталь тяжелее воды?</div>
+    <div class="quiz-opts">
+      <div class="quiz-opt" onclick="answer(4,this,false)"><div class="opt-num">А</div>Потому что корабль движется и вода его держит</div>
+      <div class="quiz-opt" onclick="answer(4,this,false)"><div class="opt-num">Б</div>Потому что сталь не тонет в солёной воде</div>
+      <div class="quiz-opt" onclick="answer(4,this,true)"><div class="opt-num">В</div>Потому что внутри воздух — средняя плотность корабля меньше воды</div>
+      <div class="quiz-opt" onclick="answer(4,this,false)"><div class="opt-num">Г</div>Потому что корабль очень большой</div>
+    </div>
+    <div class="quiz-explain" id="exp4"></div>
+  </div>
+
+  <button class="nav-btn btn-next" id="toSummaryBtn" onclick="goTo(7)" disabled style="margin-top:4px;">
+    Посмотреть результат →
+  </button>
+
+  <div class="nav-btns" style="margin-top:0;">
+    <button class="nav-btn btn-back" onclick="goTo(5)">← Назад</button>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: ИТОГ ==================== -->
+<div class="slide" id="slide7">
+  <div class="section-badge">🏆 Итоги урока</div>
+
+  <div class="summary-score" id="summaryBlock">
+    <div class="score-emoji" id="scoreEmoji">🏆</div>
+    <div class="score-val" id="scoreVal">4/4</div>
+    <div class="score-lbl">правильных ответов</div>
+    <div class="score-msg" id="scoreMsg"></div>
+    <div style="margin-top:10px;font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;" id="studentInfoDisplay"></div>
+  </div>
+
+  <!-- Статус отправки в таблицу -->
+  <div class="send-status" id="sendStatus"></div>
+
+  <div class="card">
+    <div class="card-title">Что мы узнали на уроке</div>
+  </div>
+
+  <div class="key-points">
+    <div class="kp"><div class="kp-num">1</div>Выталкивающая сила возникает из-за разности давлений жидкости на нижнюю и верхнюю части тела</div>
+    <div class="kp"><div class="kp-num">2</div>Формула: <b>F꜀ = ρ · g · V</b>, где ρ — плотность жидкости, V — объём вытесненной жидкости</div>
+    <div class="kp"><div class="kp-num">3</div>Если ρ тела &lt; ρ жидкости → тело плавает; если ρ тела > ρ жидкости → тело тонет</div>
+    <div class="kp"><div class="kp-num">4</div>Выталкивающая сила не зависит от массы тела, только от объёма и плотности жидкости</div>
+    <div class="kp"><div class="kp-num">5</div>Закон Архимеда применяется в кораблестроении, воздухоплавании, биологии (плавательный пузырь)</div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula">F꜀ = ρ жидк · g · V тела</div>
+    <div class="formula-desc">Запомни эту формулу — она в ОГЭ!</div>
+  </div>
+
+  <!-- Инструкция для учителя по настройке Google Sheets -->
+  <div class="setup-guide" id="setupGuide">
+    <div class="setup-guide-title">🛠️ Инструкция для учителя: подключить Google Таблицу</div>
+
+    <div class="setup-step">
+      <div class="setup-step-num">1</div>
+      <div>Открой <b style="color:var(--text);">script.google.com</b> и создай новый проект. Вставь этот код:
+        <div class="setup-code">function doPost(e) {
+  var sheet = SpreadsheetApp
+    .openById("ВАШ_ID_ТАБЛИЦЫ")
+    .getActiveSheet();
+  var data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    data.timestamp,
+    data.name,
+    data.className,
+    data.score,
+    data.total
+  ]);
+  return ContentService
+    .createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+      </div>
+    </div>
+
+    <div class="setup-step">
+      <div class="setup-step-num">2</div>
+      <div>Создай Google Таблицу. Добавь заголовки в строку 1:<br>
+        <div class="setup-code">Дата/Время | Имя | Класс | Балл | Из</div>
+        Скопируй <b style="color:var(--text);">ID таблицы</b> из URL (длинная строка между /d/ и /edit) и вставь в код выше вместо <b style="color:var(--teal);">ВАШ_ID_ТАБЛИЦЫ</b>.
+      </div>
+    </div>
+
+    <div class="setup-step">
+      <div class="setup-step-num">3</div>
+      <div>В редакторе скрипта: <b style="color:var(--text);">Развернуть → Новое развёртывание</b>. Тип: «Веб-приложение». Доступ: <b style="color:var(--text);">«Все»</b>. Нажми «Развернуть» и скопируй URL.</div>
+    </div>
+
+    <div class="setup-step">
+      <div class="setup-step-num">4</div>
+      <div>Вставь URL веб-приложения сюда и нажми «Сохранить»:
+        <div class="url-input-wrap">
+          <input class="url-input" id="scriptUrlInput" type="url" placeholder="https://script.google.com/macros/s/...">
+          <button class="url-save-btn" onclick="saveScriptUrl()">Сохранить</button>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:6px;">URL сохраняется в браузере (localStorage). Настраивается один раз на устройстве учителя.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- НЕТ кнопки "Пройти снова" — тест однократный -->
+  <div style="background:rgba(0,180,216,0.06);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:center;font-size:12px;color:var(--text-dim);line-height:1.6;">
+    ✅ Тест завершён. Результат записан.<br>
+    <span style="color:var(--text-mid);">Повторное прохождение недоступно.</span>
+  </div>
+
+  <div class="nav-btns" style="margin-top:0;">
+    <button class="nav-btn btn-back" onclick="goTo(6)">← К тесту</button>
+  </div>
+</div>
+
+<script>
+// ===== CONFIG =====
+var SCRIPT_URL_KEY = 'archimedes_script_url';
+
+// ===== STATE =====
+var currentSlide = 1;
+var totalSlides = 7;
+var quizAnswers = {1:null,2:null,3:null,4:null};
+var score = 0;
+var studentName = '';
+var studentClass = '';
+var resultSent = false;
+
+var EXPLAINS = {
+  1:{ok:'✅ Верно! Выталкивающая сила всегда направлена строго вертикально вверх — это следует из того, что давление жидкости растёт с глубиной.',fail:'❌ Неверно. Выталкивающая сила всегда направлена вертикально вверх, потому что давление снизу больше, чем сверху.'},
+  2:{ok:'✅ Верно! F = ρgV = 1000 · 10 · 0.0002 = 2 Н. Переводи объём в м³: 200 см³ = 0.0002 м³.',fail:'❌ Неверно. F = 1000 · 10 · 0.0002 = 2 Н. Важно перевести 200 см³ в м³: делим на 1 000 000.'},
+  3:{ok:'✅ Верно! Плотность дерева (600) меньше плотности воды (1000), значит сила Архимеда больше веса — брусок всплывает.',fail:'❌ Неверно. Так как ρ дерева = 600 < ρ воды = 1000, выталкивающая сила превышает вес — брусок будет плавать.'},
+  4:{ok:'✅ Верно! Корабль полый внутри — там воздух. Средняя плотность корабля с воздухом меньше 1000 кг/м³, поэтому он плавает.',fail:'❌ Неверно. Дело в конструкции: корабль полый внутри. Воздух внутри делает среднюю плотность корабля меньше воды.'},
+};
+
+// ===== REGISTRATION =====
+function startLesson() {
+  var name = document.getElementById('inputName').value.trim();
+  var cls  = document.getElementById('inputClass').value.trim();
+  var err  = document.getElementById('regError');
+
+  if (!name || !cls) {
+    err.textContent = 'Пожалуйста, заполни оба поля';
+    err.classList.add('show');
+    return;
+  }
+  if (name.length < 3) {
+    err.textContent = 'Введи полное имя (минимум 3 символа)';
+    err.classList.add('show');
+    return;
+  }
+
+  studentName  = name;
+  studentClass = cls;
+  err.classList.remove('show');
+
+  // Hide registration screen
+  document.getElementById('regScreen').style.display = 'none';
+
+  // Show student badge in header
+  var badge = document.getElementById('studentBadge');
+  badge.textContent = studentName + ' · ' + studentClass;
+  badge.style.display = 'block';
+
+  // Init canvases
+  setTimeout(drawIntro, 200);
+  setTimeout(updatePressure, 100);
+  setTimeout(calcArch, 100);
+  setTimeout(updateExp, 100);
+}
+
+// Enter key on inputs
+document.getElementById('inputName').addEventListener('keydown', function(e){ if(e.key==='Enter') document.getElementById('inputClass').focus(); });
+document.getElementById('inputClass').addEventListener('keydown', function(e){ if(e.key==='Enter') startLesson(); });
+
+// ===== NAVIGATION =====
+function goTo(n) {
+  document.getElementById('slide'+currentSlide).classList.remove('active');
+  document.getElementById('dot'+currentSlide).classList.remove('active');
+  if (currentSlide < n) document.getElementById('dot'+currentSlide).classList.add('done');
+  currentSlide = n;
+  document.getElementById('slide'+n).classList.add('active');
+  document.getElementById('dot'+n).classList.add('active');
+  document.getElementById('dot'+n).classList.remove('done');
+  var pct = Math.round((n/totalSlides)*100);
+  document.getElementById('progFill').style.width = pct+'%';
+  document.getElementById('progTxt').textContent = n+' / '+totalSlides;
+  window.scrollTo(0,0);
+  if(n===2) setTimeout(updatePressure,100);
+  if(n===3) setTimeout(calcArch,100);
+  if(n===4) setTimeout(updateExp,100);
+  if(n===7) showSummary();
+}
+
+// ===== QUIZ — 1 ПОПЫТКА =====
+function answer(qNum, el, correct) {
+  if (quizAnswers[qNum] !== null) return; // заблокировано — уже ответил
+  quizAnswers[qNum] = correct;
+  if (correct) score++;
+
+  var opts = el.closest('.quiz-opts').querySelectorAll('.quiz-opt');
+  opts.forEach(function(o){ o.classList.add('disabled'); });
+  el.classList.add(correct ? 'correct' : 'wrong');
+  el.querySelector('.opt-num').textContent = correct ? '✓' : '✗';
+
+  var exp = document.getElementById('exp'+qNum);
+  exp.textContent = EXPLAINS[qNum][correct ? 'ok' : 'fail'];
+  exp.className = 'quiz-explain show ' + (correct ? 'ok' : 'fail');
+
+  var allDone = Object.values(quizAnswers).every(function(v){ return v !== null; });
+  if (allDone) document.getElementById('toSummaryBtn').disabled = false;
+}
+
+// ===== SUMMARY + SEND TO SHEETS =====
+function showSummary() {
+  var msgs = [
+    'Нужно повторить материал — перечитай теорию! 📚',
+    'Неплохо, но есть над чем поработать.',
+    'Хорошо! Почти всё знаешь — осталось закрепить.',
+    'Отлично! Материал усвоен. Так держать! 🎉',
+    'Превосходно! Ты настоящий знаток закона Архимеда! 🏆'
+  ];
+  var emojis = ['😔','🤔','😊','😄','🏆'];
+  var idx = Math.min(score, 4);
+  document.getElementById('scoreVal').textContent = score+'/4';
+  document.getElementById('scoreEmoji').textContent = emojis[idx];
+  document.getElementById('scoreMsg').textContent = msgs[idx];
+  document.getElementById('studentInfoDisplay').textContent = studentName + ' · ' + studentClass;
+
+  // Load saved URL into input
+  var saved = localStorage.getItem(SCRIPT_URL_KEY);
+  if (saved) document.getElementById('scriptUrlInput').value = saved;
+
+  // Send result once
+  if (!resultSent) {
+    resultSent = true;
+    sendToSheets();
+  }
+}
+
+function sendToSheets() {
+  var url = localStorage.getItem(SCRIPT_URL_KEY);
+  if (!url) {
+    showSendStatus('setup', '⚙️ URL Google Script не задан — смотри инструкцию ниже');
+    return;
+  }
+
+  showSendStatus('sending', '📤 Отправляю результат в журнал...');
+
+  var now = new Date();
+  var ts = now.toLocaleString('ru-RU', {
+    day:'2-digit', month:'2-digit', year:'numeric',
+    hour:'2-digit', minute:'2-digit'
+  });
+
+  var payload = {
+    timestamp: ts,
+    name: studentName,
+    className: studentClass,
+    score: score,
+    total: 4
+  };
+
+  fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function() {
+    showSendStatus('sent', '✅ Результат записан в журнал учителя!');
+  })
+  .catch(function(err) {
+    showSendStatus('error', '❌ Ошибка отправки. Проверь URL скрипта в инструкции ниже.');
+    resultSent = false; // allow retry after URL fix
+  });
+}
+
+function showSendStatus(type, msg) {
+  var el = document.getElementById('sendStatus');
+  el.textContent = msg;
+  el.className = 'send-status ' + (type === 'sending' ? 'sending' : type === 'sent' ? 'sent' : 'error');
+}
+
+function saveScriptUrl() {
+  var val = document.getElementById('scriptUrlInput').value.trim();
+  if (!val || !val.startsWith('https://')) {
+    alert('Введи корректный URL (начинается с https://)');
+    return;
+  }
+  localStorage.setItem(SCRIPT_URL_KEY, val);
+  // Retry send if failed
+  if (!document.getElementById('sendStatus').classList.contains('sent')) {
+    resultSent = false;
+    sendToSheets();
+  } else {
+    alert('URL сохранён! Следующие результаты будут отправляться автоматически.');
+  }
+}
+
+// ===== CANVAS: INTRO =====
+var introObjects = [
+  {x:80, y:40, type:'wood',  inWater:false},
+  {x:160,y:40, type:'metal', inWater:false},
+  {x:240,y:40, type:'ice',   inWater:false},
+];
+
+function drawIntro() {
+  var c = document.getElementById('introCanvas');
+  if(!c) return;
+  var ctx = c.getContext('2d');
+  var W=300, H=200, waterY=110;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#06101a'; ctx.fillRect(0,0,W,H);
+  var wg = ctx.createLinearGradient(0,waterY,0,H);
+  wg.addColorStop(0,'rgba(0,150,199,0.7)'); wg.addColorStop(1,'rgba(0,80,130,0.9)');
+  ctx.fillStyle=wg; ctx.fillRect(0,waterY,W,H-waterY);
+  ctx.fillStyle='rgba(100,200,255,0.4)';
+  ctx.beginPath(); ctx.moveTo(0,waterY);
+  for(var wx=0;wx<=W;wx+=10) ctx.lineTo(wx,waterY+Math.sin(wx*0.08+Date.now()*0.002)*3);
+  ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath(); ctx.fill();
+  var labels=[{x:80,txt:'🪵',name:'Дерево'},{x:160,txt:'🔩',name:'Металл'},{x:240,txt:'🧊',name:'Лёд'}];
+  labels.forEach(function(l,i){
+    var obj=introObjects[i];
+    ctx.font='24px serif'; ctx.textAlign='center'; ctx.fillStyle='#fff';
+    ctx.fillText(l.txt,l.x,obj.y+16);
+    ctx.fillStyle='rgba(255,255,255,0.6)'; ctx.font='9px Nunito,sans-serif';
+    ctx.fillText(l.name,l.x,obj.y-4);
+  });
+  introObjects.forEach(function(obj,i){
+    if(obj.inWater){
+      var col=i===1?'#e63946':'#52b788';
+      var txt=i===1?'⬇ ТОНЕТ':'⬆ ПЛАВАЕТ';
+      ctx.fillStyle=col; ctx.font='bold 9px JetBrains Mono,monospace'; ctx.textAlign='center';
+      ctx.fillText(txt,[80,160,240][i],H-8);
+    }
+  });
+  ctx.textAlign='left';
+}
+
+document.getElementById('introCanvas').addEventListener('click',function(e){
+  var rect=e.target.getBoundingClientRect();
+  var x=e.clientX-rect.left, waterY=110;
+  introObjects.forEach(function(obj,i){
+    var ox=[80,160,240][i];
+    if(Math.abs(x-ox)<30 && !obj.inWater){
+      obj.inWater=true;
+      var target=(i===1)?185:waterY-10;
+      var startY=obj.y, f=0, total=25;
+      var anim=setInterval(function(){
+        f++; obj.y=startY+(target-startY)*(f/total); drawIntro();
+        if(f>=total) clearInterval(anim);
+      },16);
+    }
+  });
+});
+
+// ===== CANVAS: PRESSURE =====
+function updatePressure() {
+  var depth=parseInt(document.getElementById('depthSlider').value);
+  document.getElementById('depthVal').textContent=depth+' м';
+  var c=document.getElementById('pressureCanvas'); if(!c) return;
+  var ctx=c.getContext('2d'), W=300, H=220;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#06101a'; ctx.fillRect(0,0,W,H);
+  var wg=ctx.createLinearGradient(0,0,0,H);
+  wg.addColorStop(0,'rgba(0,150,199,0.5)'); wg.addColorStop(1,'rgba(0,50,100,0.9)');
+  ctx.fillStyle=wg; ctx.fillRect(0,0,W,H);
+  var bodyY=20+(depth/10)*140, bw=50, bh=40, bx=(W-bw)/2;
+  var pTop=depth*0.8, pBot=(depth+0.4)*0.8, arrowScale=3;
+  var topLen=Math.max(10,pTop*arrowScale);
+  drawArrow(ctx,W/2-15,bodyY-topLen,W/2-15,bodyY,'#48cae4',topLen);
+  drawArrow(ctx,W/2+15,bodyY-topLen,W/2+15,bodyY,'#48cae4',topLen);
+  ctx.fillStyle='rgba(251,133,0,0.7)'; ctx.strokeStyle='rgba(251,133,0,0.9)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(bx,bodyY,bw,bh,6); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='11px JetBrains Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('тело',W/2,bodyY+bh/2+4);
+  var botLen=Math.max(14,pBot*arrowScale);
+  drawArrow(ctx,W/2-15,bodyY+bh+botLen,W/2-15,bodyY+bh,'#ffe566',botLen);
+  drawArrow(ctx,W/2+15,bodyY+bh+botLen,W/2+15,bodyY+bh,'#ffe566',botLen);
+  ctx.fillStyle='#48cae4'; ctx.font='9px JetBrains Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('P верх = '+pTop.toFixed(1)+' кПа',W/2,bodyY-topLen-4);
+  ctx.fillStyle='#ffe566';
+  ctx.fillText('P низ = '+pBot.toFixed(1)+' кПа',W/2,bodyY+bh+botLen+14);
+  ctx.fillStyle='#52b788'; ctx.font='bold 10px JetBrains Mono,monospace';
+  ctx.fillText('F꜀ = ↑ разность давлений',W/2,H-8);
+  ctx.textAlign='left';
+}
+
+function drawArrow(ctx,x1,y1,x2,y2,color) {
+  ctx.strokeStyle=color; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  var angle=Math.atan2(y2-y1,x2-x1);
+  ctx.fillStyle=color; ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-8*Math.cos(angle-0.4),y2-8*Math.sin(angle-0.4));
+  ctx.lineTo(x2-8*Math.cos(angle+0.4),y2-8*Math.sin(angle+0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+// ===== CALC ARCHIMEDES =====
+function calcArch() {
+  var rho=parseInt(document.getElementById('rhoSlider').value);
+  var vol=parseInt(document.getElementById('volSlider').value);
+  document.getElementById('rhoVal').textContent=rho;
+  document.getElementById('volVal').textContent=vol;
+  var V=vol/1e6, F=rho*10*V, m=rho*V;
+  document.getElementById('archForce').textContent=F.toFixed(3);
+  document.getElementById('archMass').textContent=m.toFixed(4);
+  document.getElementById('archForce').className='info-val'+(F>5?' highlight':'');
+}
+
+// ===== EXP CANVAS =====
+var var_green='#52b788', var_red='#e63946', var_blue='#00b4d8';
+
+function updateExp() {
+  var bodyRho=parseInt(document.getElementById('bodyRhoSlider').value);
+  document.getElementById('bodyRhoVal').textContent=bodyRho;
+  var c=document.getElementById('expCanvas'); if(!c) return;
+  var ctx=c.getContext('2d'), W=300, H=240, waterY=80;
+  var waterRho=1000, V=0.0005, g=10;
+  var F_arch=waterRho*g*V, weight=bodyRho*g*V, ratio=bodyRho/waterRho;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle='#06101a'; ctx.fillRect(0,0,W,H);
+  var wg=ctx.createLinearGradient(0,waterY,0,H);
+  wg.addColorStop(0,'rgba(0,150,199,0.55)'); wg.addColorStop(1,'rgba(0,60,110,0.9)');
+  ctx.fillStyle=wg; ctx.fillRect(0,waterY,W,H-waterY);
+  var bw=50, bh=40, bx=(W-bw)/2, by, col;
+  if(ratio<1){ by=waterY-bh*(1-ratio); col=var_green; }
+  else if(ratio>1){ by=H-bh-20; col=var_red; }
+  else { by=waterY+20; col=var_blue; }
+  ctx.fillStyle='rgba(251,133,0,0.75)'; ctx.strokeStyle='rgba(255,150,80,0.9)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,6); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='10px JetBrains Mono,monospace'; ctx.textAlign='center';
+  ctx.fillText('тело',W/2,by+bh/2+4);
+  var scl=12;
+  if(ratio<=1){
+    var fLen=Math.min(50,F_arch*scl);
+    drawArrow(ctx,W/2+35,by+bh/2,W/2+35,by+bh/2-fLen,'#52b788');
+    ctx.fillStyle='#52b788'; ctx.font='8px JetBrains Mono,monospace'; ctx.textAlign='left';
+    ctx.fillText('F꜀='+F_arch.toFixed(1)+'Н',W/2+42,by+bh/2-fLen/2);
+  }
+  if(ratio>0.1){
+    var wLen=Math.min(50,weight*scl);
+    drawArrow(ctx,W/2-35,by+bh/2,W/2-35,by+bh/2+wLen,'#e63946');
+    ctx.fillStyle='#e63946'; ctx.font='8px JetBrains Mono,monospace'; ctx.textAlign='right';
+    ctx.fillText('P='+weight.toFixed(1)+'Н',W/2-42,by+bh/2+wLen/2);
+  }
+  ctx.fillStyle=col; ctx.font='bold 12px JetBrains Mono,monospace'; ctx.textAlign='center';
+  var lbl=ratio<1?'🪵 ПЛАВАЕТ':ratio>1?'⬇ ТОНЕТ':'↔ ПАРИТ';
+  ctx.fillText(lbl,W/2,H-8);
+  ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='9px JetBrains Mono,monospace';
+  ctx.fillText('ρ тела = '+bodyRho+' кг/м³  |  ρ воды = 1000 кг/м³',W/2,20);
+  ctx.textAlign='left';
+  document.getElementById('weightVal').textContent=weight.toFixed(1);
+  document.getElementById('archVal2').textContent=F_arch.toFixed(1);
+  var rEl=document.getElementById('resultTxt');
+  if(ratio<1){rEl.textContent='🪵 ПЛАВАЕТ';rEl.style.color=var_green;}
+  else if(ratio>1){rEl.textContent='⬇ ТОНЕТ';rEl.style.color=var_red;}
+  else{rEl.textContent='↔ ПАРИТ';rEl.style.color=var_blue;}
+}
+
+// ===== INIT =====
+// Canvases init when registration done (called in startLesson)
+// But pressure/arch/exp can pre-init safely too
+setTimeout(updatePressure,200);
+setTimeout(calcArch,200);
+setTimeout(updateExp,200);
+</script>
+</body>
+</html>
